@@ -1,0 +1,59 @@
+1-10	: library yang dipake
+12-29	: variabel yang dipake
+30-35	: 30 itu inisialisasi penggunaan WDT untuk mengaktifkan library sleepy
+		  31-35 inisialisasi pin dan tipe DHT yang dipake
+41-59	: inisialisasi payload mirf
+		  mengaktifkan mode sleepy selama 1000ms
+		  53-55 untuk membuat waktu menunggu node tersebut dalam menerima konfirmasi sinkronisasi
+63-90	: diliat jika switch on dan mirf siap menerima paket
+		  mirf menerima paket dari root
+		  inisialisasi variabel f dengan nilai dari DataTerima ke 30
+		  w = f
+		  cetak w yaitu jadwal detik untuk mekanisme TDMA
+		  menjalankan method discovered
+		  khusus jika node berada di level 2, maka waktu tunggunya jadi 7000ms, untuk mempersingkat demo
+		  lalu kemudian waktu tunggu dicetak di serial monitor
+91-97	: jika paket data bertipe S
+		  jalanan method waktu
+		  jalankan method buffering
+		  jalankan method synchronized
+		  jalankan method waktu
+89-95	: jika paket data bertipe R
+		  jalankan method waktu
+		  serial print Timestamp2 dan milidetik
+		  TimeStampInt nilainya sama dengan milidetik
+		  jalankan method answer_sync
+96-99	: jika paket daya bertipe T
+		  jalankan method TDMArecv untuk menampilkan isi dari payload
+100		: jika tipe paket data selain S, R dan T
+101-103	: jika node belum tersinkron dan terdaftar dan millis%tunggu =1
+		  jalankan method synchronize dengan delay 1 ms
+105-120	: jika node sudah tersinkron dan jika milidetik%999=0
+		  aktifkan mode sleepy selama 300ms
+		  jika sudah wake up, dan nilai menit=2 dan level=1 dan nilai w=5
+		  increment nilai var x
+		  jika x<12
+		  increment nilai q +5
+		  jalankan method discovery
+		  jalankan method oke
+		  jika nilai q sudah mencapai 55 maka nilai q direset menjadi 0
+121-128 : jika nilai detik = w dan menit sudah diatas 3
+		  jalankan method TDMAsend
+		  123-125 (ini tidak diperlukan tapi blm dihapus)
+133-139 : method oke sama dengan method oke pada root
+140-155 : method discovered untuk mengkonfigurasi node tersebut setelah berhasil berkomunikasi awal dengan root
+159-171 : method UbahAlamat untuk merubah alamat node setelah terdiscover root
+173-196 : method synchronize digunakan untuk melakukan sinkronisasi dengan root
+199-217 : method synchronized digunakan untuk mengkonfirmasi bahwa node telah sinkron dengan root dan menghitung delay dan time offset antara node dan root
+219-258 : method waktu dan cetak waktu
+261-266 : method ubahwaktu digunakan untuk mengubah waktu ketika telah tersinkronisasi dengan root
+269-279 : method discovery digunakan jika node berfungsi juga sebagai root level selanjutnya
+283-307 : method kirimwaktu. untuk mengirimkan waktu ketika berfungsi sebagai root level selanjutnya
+309-338 : method answer_sync digunakan ketika node telah mengirimkan ack pada root
+340-364 : method buffering. digunakan untuk menyusun payload yang akan dikirim
+		  357-360 perhitungan TPSN yaitu delay propagasi
+367-392 : method TDMAsend digunakan untuk mengirim data berupa suhu ke root
+394-403 : digunakan untuk menerima pesan dari metode TDMA
+406-407	: schedule TDMA. tidak dipakai karena sudah diganti dengan nilai q
+
+		  

@@ -1,0 +1,64 @@
+keterangan arduino root
+1-6 	: library yang dipake
+9-23 	: variabel yang dipake
+27-30 	: generate alamat
+33-39 	: setting mirf
+43-44 	: kalo ada paket datang dan mirf siap menerima. maka lakukan perintah di bawah
+45-46 	: check level paket data yang datang
+47-62 	: kalo paketnya tipe R, dan levelnya dibawah 2
+		  waktu ttep jalan
+		  print serial T2, milidetik
+		  jalankan perintah method sinkronisasi
+64-65 	: kalo tipe data T, jalankan method TDMArecv
+69	  	: kalo tipe data paketnya bukan dari T atau R
+69-76 	: kalo millis < 12000
+		  increment q + 5
+		  jalankan method discovery
+		  jalankan method oke
+		  kalo hasil increment dari q == 55 reset q =0
+		  terus delay
+77-92 	: kalo millis di %999 hasilnya 0
+		  jalankan method cetakwaktu
+		  trus di delay dikit 3 ms
+85-96 	: method discovery
+		  set channel dan payload data yang mau dikirim
+		  copy string ke payload DataKirim sebagai header paket B
+		  string concat DataKirim dan AlamatSendiri
+		  string concat DataKirim dan Level
+		  set payload di string ke 30 dengan nilai q
+		  kirim payload DataKirim
+		  print "discovery message spreading"
+		  di delay 100 ms
+99-103	: method oke
+		  print "jadwal detik :"
+		  print nilai dari q
+		  inisialisasi variabel h diisi dengan nilai dari sting ke 30 pada payload DataKirim
+		  print nilai dari h
+105-136	: methodnya sinkronisasi
+		  jalankan method TDMAsched
+		  set AlamatTerima untuk mengidentifikasi alamat asal paket payload yg datang
+		  set T1 untuk mengidentifikasi waktu timestamp1  dari payload yg datang
+		  print "request synchronization from : "
+		  print AlamatTerima, alamat dari node yg request sinkronisasi
+		  jalankan method cetakwaktu
+		  set alamat node yang akan dikirimin paket payload
+		  jalanka method kirimwaktu
+		  string concat DataKirim dan timestamp1
+		  kalau nilai TimeStampInt < 10
+		  concat DataKirim dengan nilai 0
+		  concat DataKirim dengan nilai 0
+		  kalau nilai TimeStampInt < 100
+		  print serial Sched2 dengan Sched
+		  concat DataKirim dengan Sched2
+		  kirim payload DataKirim ke alamat yang dituju
+		  isi variabel akb dengan nilai millis
+		  kemudian nilai akb adalah selisih dari akb-akk
+		  cetak nilai akb
+		  sementara payload dikirim, cetak synchronization sent
+139-158 : method waktu, untuk menjalankan waktu pada node
+159-165 : method cetakwaktu, untuk mencetak waktu yang sudah berjalan
+167-191 : method kirimwaktu, untuk mengisi payload dengan waktu yang ditunjukkan untuk node lain
+193-195 : method TDMAsched, digunakan untuk mengatur jadwal TDMA, tidak berefek pada program
+196-203 : method TDMAack, digunakan untuk menampilkan data yang diterima dari node lain ke serial monitor
+205-213 : method TDMArecv, digunakan untuk menerima payload data dari node lain
+		  
